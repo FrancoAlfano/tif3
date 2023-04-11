@@ -19,9 +19,9 @@ load_dotenv()
 
 def get_data(url,params):
     results = []
-    for _ in range(100):
+    for _ in range(50):
         response = requests.get(url, headers=headers, params=params)
-        # Generar excepción si la respuesta no es exitosa
+        # Generate exception if response isn't ok
         if response.status_code != 200:
             raise Exception(response.status_code, response.text)
         data = response.json()['data']
@@ -32,13 +32,7 @@ def get_data(url,params):
         else:
             token = meta_data['next_token']
             params = {
-                'query': 'to:twitter OR #twitter OR @twitter -is:retweet lang:en',
-                #'query': 'to:kfc OR #kfc OR @kfc -is:retweet lang:en',
-                #'query': '#pathofexile OR #poe @zizaran OR @Steelmage2 OR @MathilExists -is:retweet lang:en',
-                #'query': 'from:pathofexile -is:retweet lang:en',
-                #'query': '@bexsayswords -is:retweet lang:en',
-                #'start_time': "2021-10-26T00:00:00Z",
-                #'end_time': '2021-10-30T00:00:00Z',
+                'query': 'to:cocacola OR #cocacola OR @cocacola -is:retweet lang:en',
                 'next_token':token,
                 'max_results':100
             }
@@ -48,13 +42,7 @@ bearer_token = os.environ.get("Bearer")
 url ="https://api.twitter.com/2/tweets/search/recent"
 
 params = {
-    'query': 'to:twitter OR #twitter OR @twitter -is:retweet lang:en',
-    #'query': 'to:kfc OR #kfc OR @kfc -is:retweet lang:en',
-    #'query': '#pathofexile OR #poe @zizaran OR @Steelmage2 OR @MathilExists -is:retweet lang:en',
-    #'query': 'from:pathofexile -is:retweet lang:en',
-    #'query': '@bexsayswords -is:retweet lang:en',
-    #'start_time': "2021-10-26T00:00:00Z",
-    #'end_time': '2021-10-30T00:00:00Z',
+    'query': 'to:cocacola OR #cocacola OR @cocacola -is:retweet lang:en',
     'max_results': 100
 }
 
@@ -74,24 +62,16 @@ df['text'] = df['text'].str.replace(rm_hash, '', regex=True)
 df['text'] = df['text'].str.replace(rm_usr_mention, '', regex=True)
 df['text'] = df['text'].str.lower()
 
-#df.to_csv('kfc.csv')
-df.to_csv('twitter.csv')
-
-
-""" 
-
-#Remover Stop Words de la columna
+#remove stop words from column
 stop_words = set(stopwords.words('english'))
-#new_stopwords = ['play', 'pathofexile', 'game', 'streamer', 'live', 'twitch', 'est', 'smallstreamer']
-#new_stopwords_list = stop_words.union(new_stopwords)
 df['cleaned_stop_words'] = df["text"].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
 
-# Aplicar Tokenizer a la columna
+# tokenize column
 tt = TweetTokenizer()
 tokenized_text = df['cleaned_stop_words'].apply(tt.tokenize)
 df["tokenized_text"] = tokenized_text
 
-#Aplicar pos tag, todos los adjetivos
+#apply pos tag, adjectives
 tagged_ok = []
 for row in df["tokenized_text"]:
     tags = pos_tag(row)
@@ -99,13 +79,13 @@ for row in df["tokenized_text"]:
         if tag == "JJR" or tag == "JJS" or tag == "JJ":
             tagged_ok.append((word, 'A'))
 
-#Aplicar Lemmatizacion
+#lemmatize
 wordnet_lemmatizer = WordNetLemmatizer()
 lemmatized = []
 for word, simbol in tagged_ok:
     lemmatized.append(wordnet_lemmatizer.lemmatize(word, simbol.lower()))
 
-# Analizador de Sentimientos
+# sentiment analysis
 sentiment_analyzer = SentimentIntensityAnalyzer()
 df["negative"] = ""
 df["neutral"] = ""
@@ -120,7 +100,7 @@ for index, row in df.iterrows():
     row["negative"] = analisis["neg"]
     row["neutral"] = analisis["neu"]
     row["positive"] = analisis["pos"]
-    # Evaluar que valores se considerarán positivo o negativo
+    # fine tune what is considered positive or negative
     if analisis['compound'] > 0.6 :
         row["result"] = "Positive"
         positives += 1
@@ -134,23 +114,3 @@ for index, row in df.iterrows():
 print(f"Positives= {positives}")
 print(f"Neutrals= {neutrals}")
 print(f"Negatives= {negatives}")
-
-
-#Frecuencia de las palabras
-fdist = FreqDist(lemmatized)
-df_fdist = pd.DataFrame.from_dict(fdist, orient='index')
-df_fdist.columns = ['Frequency']
-df_fdist.index.name = 'Term'
-df_fdist.sort_values(by=['Frequency'], inplace=True)
-print(df_fdist)
-all_tweets = []
-for text in df["tokenized_text"]:
-    all_tweets += text
-
-# Grafico de Palabras
-wordcloud = WordCloud(max_words=100, background_color="white").generate(" ".join(lemmatized))
-plt.imshow(wordcloud, interpolation='bilinear')
-plt.axis("off")
-plt.rcParams['figure.figsize'] = [300, 300]
-plt.show()
- """
