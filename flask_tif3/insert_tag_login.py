@@ -16,14 +16,43 @@ import statistics
 from decimal import Decimal as D
 from langdetect import detect
 from flask import Flask, jsonify, request, render_template, url_for, flash, redirect
-
-load_dotenv()
+from flask import Flask, render_template, url_for, flash, redirect
+from forms import RegistrationForm, LoginForm
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 
-@app.route('/')
+
+@app.route("/")
+@app.route("/home")
+def home():
+    return render_template('home.html')
+
+
+@app.route('/tag')
 def tag():
     return render_template('tag.html')
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!', 'success')
+        return redirect(url_for('home'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'franco.alfano.95@gmail.com' and form.password.data == '123':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('login.html', title='Login', form=form)
+
 
 @app.route('/tag', methods=['GET', 'POST'])
 def get_tag():
@@ -32,7 +61,7 @@ def get_tag():
 
     def get_data(url,params):
         results = []
-        for _ in range(50):
+        for _ in range(10):
             response = requests.get(url, headers=headers, params=params)
             # Generate exception if response isn't ok
             if response.status_code != 200:
@@ -47,7 +76,7 @@ def get_tag():
                 params = {
                     'query': 'to:{} OR #{} OR @{} -is:retweet'.format(tag,tag,tag),
                     'next_token':token,
-                    'max_results':100
+                    'max_results':50
                 }
         df = pd.concat(results)
         #as the twitter api doesn't correctly filter english tweets, we will do it here
@@ -60,7 +89,7 @@ def get_tag():
 
     params = {
         'query': 'to:{} OR #{} OR @{} -is:retweet'.format(tag,tag,tag),
-        'max_results': 100
+        'max_results': 50
     }
 
     headers = {
@@ -120,22 +149,42 @@ def get_tag():
         row["neutral"] = analisis["neu"]
         row["positive"] = analisis["pos"]
         # fine tune what is considered positive or negative
-        if analisis['compound'] > 0.5 :
+        if analisis['compound'] > 0.6 :
             row["result"] = "Positive"
             positives += 1
-        elif analisis['compound'] < 0.4:
+        elif analisis['compound'] < 0.3:
             row["result"] = "Negative"
             negatives += 1
         else :
             row["result"] = "Neutral"
             neutrals += 1
 
-    #print(f"Positives= {positives}")
-    #print(f"Neutrals= {neutrals}")
-    #print(f"Negatives= {negatives}")
-    return render_template('result.html', tag=request.form['tag'], pos=positives, neu=neutrals, neg=negatives)
-    
- 
- 
+    #percentages
+    total = positives + negatives + neutrals
+    pos_percentage = (positives / total)*100
+    neg_percentage = (negatives / total)*100
+    neu_percentage = (neutrals / total)*100
+
+    #Word frequency
+    fdist = FreqDist(lemmatized)
+    df_fdist = pd.DataFrame.from_dict(fdist, orient='index')
+    df_fdist.columns = ['Frequency']
+    df_fdist.index.name = 'Term'
+    df_fdist.sort_values(by=['Frequency'], inplace=True)
+
+    # Grafico de Palabras
+    wordcloud = WordCloud(max_words=100, background_color="white").generate(" ".join(lemmatized))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.rcParams['figure.figsize'] = [300, 300]
+    plt.show()
+
+    return render_template('result.html', tag=request.form['tag'],
+                           pos=positives, neu=neutrals, neg=negatives,
+                           posp=round(pos_percentage),negp=round(neg_percentage),neup=round(neu_percentage),
+                           df=df_fdist)
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)

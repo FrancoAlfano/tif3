@@ -5,10 +5,28 @@
     <title>Results!</title>
 </head>
 <body>
-<h1>Resultados!</h1>
-<h2>Resultado de palabras para la tag: #{{ tag }}</h2>
-<h2>Positivos: {{ pos }}</h2>
-<h2>Neutros: {{ neu }}</h2>
-<h2>Negativos: {{ neg }}</h2>
+<h1>Results!</h1>
+<h2>Results for tag: #{{ tag }}</h2>
+<h2>Positive: {{ pos }}, that's %{{posp}} of the total Tweets</h2>
+<h2>Neutral: {{ neu }}, that's %{{neup}} of the total Tweets</h2>
+<h2>Negative: {{ neg }}, that's %{{negp}} of the total Tweets</h2>
 </body>
+
+<table>
+    <thead>
+      <tr>
+        <th>Term</th>
+        <th>Frequency</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for index, row in df.iterrows() %}
+        <tr>
+          <td>{{ index }}</td>
+          <td>{{ row['Frequency'] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
 </html>
