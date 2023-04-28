@@ -7,7 +7,8 @@ from nltk import pos_tag
 from nltk.tokenize import TweetTokenizer
 from nltk.probability import FreqDist
 from nltk.stem import WordNetLemmatizer
-from wordcloud import WordCloud
+from wordcloud import WordCloud, STOPWORDS
+from PIL import Image
 import matplotlib.pyplot as plt
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer 
 from nltk.corpus import stopwords
@@ -15,12 +16,14 @@ import re
 import statistics
 from decimal import Decimal as D
 from langdetect import detect
+import numpy as np
+
 
 load_dotenv()
 
 def get_data(url,params):
     results = []
-    for _ in range(50):
+    for _ in range(10):
         response = requests.get(url, headers=headers, params=params)
         # Generate exception if response isn't ok
         if response.status_code != 200:
@@ -33,7 +36,7 @@ def get_data(url,params):
         else:
             token = meta_data['next_token']
             params = {
-                'query': 'to:{} OR #{} OR @{} -is:retweet'.format(tag,tag,tag),
+                'query': 'to:{} OR #{} OR @{} -is:retweet'.format(tag,tag, tag),
                 'next_token':token,
                 'max_results':100
             }
@@ -46,10 +49,11 @@ def get_data(url,params):
 bearer_token = os.environ.get("Bearer")
 url ="https://api.twitter.com/2/tweets/search/recent"
 
-tag = input("insert tag: #")
+tag = input("Enter tag: ")
+
 
 params = {
-    'query': 'to:{} OR #{} OR @{} -is:retweet'.format(tag,tag,tag),
+    'query': 'to:{} OR #{} OR @{} -is:retweet'.format(tag, tag,tag),
     'max_results': 100
 }
 
@@ -64,12 +68,16 @@ rm_hash = r'#'
 rm_usr_mention = r'@'
 
 df = get_data(url, params)
+
+#deleting duplicated tweets
+df = df.drop_duplicates(subset=('text'))
+
 df['text'] = df['text'].str.replace(rm_urls, '', regex=True)
 df['text'] = df['text'].str.replace(rm_hash, '', regex=True)
 df['text'] = df['text'].str.replace(rm_usr_mention, '', regex=True)
 df['text'] = df['text'].str.lower()
 
-df.to_csv('{}.csv'.format(tag))
+#df.to_csv('{}.csv'.format(tag))
 
 #remove stop words from column
 stop_words = set(stopwords.words('english'))
@@ -123,3 +131,29 @@ for index, row in df.iterrows():
 print(f"Positives= {positives}")
 print(f"Neutrals= {neutrals}")
 print(f"Negatives= {negatives}")
+
+total = positives+negatives+neutrals
+positives = format(positives/total * 100, ".1f")
+negatives = format(negatives/total * 100, ".1f")
+neutrals = format(neutrals/total * 100, ".1f")
+
+# Create pie chart
+labels = ["Positive [{}%]".format(positives), "Neutral [{}%]".format(neutrals), "Negative [{}%]".format(negatives)]
+sizes = [positives, neutrals, negatives]
+colors = ["yellowgreen", "blue", "red"]
+patches, texts = plt.pie(sizes, colors=colors, startangle=90)
+plt.style.use("default")
+plt.legend(labels)
+plt.title(f"Sentiment Analysis Result for keyword= pepsi")
+plt.axis("equal")
+plt.show()
+
+
+wordcloud = WordCloud(max_words=500, background_color="white").generate(" ".join(lemmatized))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.rcParams['figure.figsize'] = [500, 500]
+plt.show()
+
+
+df[['text','positive','negative','neutral','result']].to_csv('results2.csv')
