@@ -5,10 +5,7 @@ import pandas as pd
 from dotenv import load_dotenv
 from nltk import pos_tag
 from nltk.tokenize import TweetTokenizer
-from nltk.probability import FreqDist
 from nltk.stem import WordNetLemmatizer
-from wordcloud import WordCloud
-import matplotlib.pyplot as plt
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
 import re
@@ -20,6 +17,7 @@ from flask import Flask, render_template, url_for, flash, redirect
 from flask_restx import Namespace, Resource, fields
 from models import Results
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from plotters import plott
 
 
 result_ns =Namespace("result", description="A namespace for results")
@@ -91,8 +89,8 @@ class ResultsResource(Resource):
         tagged_ok = []
         for row in df["tokenized_text"]:
             tags = pos_tag(row)
-            for word, tag in tags:
-                if tag == "JJR" or tag == "JJS" or tag == "JJ":
+            for word, tagg in tags:
+                if tagg == "JJR" or tagg == "JJS" or tagg == "JJ":
                     tagged_ok.append((word, 'A'))
 
         #lemmatize
@@ -136,6 +134,8 @@ class ResultsResource(Resource):
         )
 
         new_result.save()
+        plott(positives, negatives, neutrals, lemmatized, tag)
+
         return jsonify({"message":"Search Complete!"})
 
 
