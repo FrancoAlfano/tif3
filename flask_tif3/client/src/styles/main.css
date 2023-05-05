@@ -1,0 +1,36 @@
+.container{
+    margin-top: 50px;
+}
+
+.heading{
+    font-size: 3em;
+}
+
+.form{
+    margin: auto;
+    width: 80%;
+}
+
+.result{
+    margin-top: 20px;
+}
+
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    background: rgba(0, 0, 0, 0.834);
+    z-index: 1;
+}
+
+@keyframes spin-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
