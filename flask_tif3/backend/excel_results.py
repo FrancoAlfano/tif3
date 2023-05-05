@@ -39,13 +39,15 @@ result_model=result_ns.model(
 @result_ns.route('/results')
 class ResultsResource(Resource):
 
-    @result_ns.marshal_list_with(result_model)
+    @result_ns.marshal_with(result_model)
     @result_ns.expect(result_model)
+    @jwt_required()
     def get(self):
         """Get all results"""
-
+        username = get_jwt_identity()
+        
         #this returns an sqlalchemy object
-        results=Results.query.all()
+        results=Results.query.filter_by(username=username).all()
         
         #we turn the object from sqlachemy into a json using the serializer
         return results

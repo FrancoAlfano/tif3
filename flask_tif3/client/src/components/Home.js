@@ -5,10 +5,18 @@ import Result from "./Result"
 
 const LoggedinHome=()=>{
     const [results, setResults]=useState([]);
+    let token = localStorage.getItem('REACT_TOKEN_AUTH_KEY')
 
     useEffect(
         ()=>{
-            fetch('/result/results')
+            const requestOptions={
+                method:'GET',
+                headers:{
+                    'content-type':'application/json',
+                    'Authorization':`Bearer ${JSON.parse(token)}`
+                }
+            }
+            fetch('/result/results',requestOptions)
             .then(res=>res.json())
             .then(data=>{
                 setResults(data)
@@ -18,15 +26,21 @@ const LoggedinHome=()=>{
     )
 
     const getAllResults=()=>{
-        fetch('/result/results')
+        
+        const requestOptions={
+            method:'GET',
+            headers:{
+                'content-type':'application/json',
+                'Authorization':`Bearer ${JSON.parse(token)}`
+            }
+        }
+        fetch("/result/results",requestOptions)
         .then(res=>res.json())
         .then(data=>{
             setResults(data)
         })
         .catch(err=>console.log(err))
     }
-
-    let token = localStorage.getItem('REACT_TOKEN_AUTH_KEY')
 
     const deleteResult=(id)=>{
 
