@@ -13,7 +13,6 @@ import statistics
 from decimal import Decimal as D
 from langdetect import detect
 from flask import Flask, jsonify, request, render_template, url_for, flash, redirect
-from flask import Flask, render_template, url_for, flash, redirect
 from flask_restx import Namespace, Resource, fields
 from models import Results
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -42,13 +41,12 @@ class ResultsResource(Resource):
     @jwt_required()
     def get(self):
         """Get all results"""
-        username = get_jwt_identity()
-        
-        #this returns an sqlalchemy object
-        results=Results.query.filter_by(username=username).all()
-        
-        #we turn the object from sqlachemy into a json using the serializer
-        return results
+        try:
+            username = get_jwt_identity()
+            results = Results.query.filter_by(username=username).all()
+            return results
+        except Exception as e:
+            return jsonify({"message": "Token error: {}".format(str(e))}), 401
 
 
     @result_ns.marshal_with(result_model)

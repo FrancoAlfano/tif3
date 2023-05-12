@@ -13,6 +13,7 @@ import HomePage from './components/Home';
 import LoginPage from './components/Login';
 import SignUp from './components/SignUp';
 import SearchTag from './components/SearchTag';
+import MoreData from './components/MoreData'
 
 
 const App=()=>{
@@ -25,6 +26,9 @@ const App=()=>{
             <Switch>
                 <Route path="/login">
                     <LoginPage/>
+                </Route>
+                <Route path="/moredata">
+                    <MoreData/>
                 </Route>
                 <Route path="/searchtag">
                     <SearchTag/>

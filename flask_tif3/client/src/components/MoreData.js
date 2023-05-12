@@ -4,7 +4,7 @@ import { useAuth } from "../auth";
 import Result from "./Result"
 import jwt_decode from 'jwt-decode' 
 
-const LoggedinHome=()=>{
+const LoggedinMoreData=()=>{
     const [results, setResults]=useState([]);
     let token = localStorage.getItem('REACT_TOKEN_AUTH_KEY')
     const history = useHistory()
@@ -18,25 +18,14 @@ const LoggedinHome=()=>{
                     'Authorization':`Bearer ${JSON.parse(token)}`
                 }
             }
-            fetch('/result/results', requestOptions)
-            .then((res) => {
-                if (res.status === 401) {
-                    localStorage.removeItem('REACT_TOKEN_AUTH_KEY')
-                    throw new Error('Session expired');
-                }
-                else if (res.status === 422) {
-                    localStorage.removeItem('REACT_TOKEN_AUTH_KEY')
-                    throw new Error('Session expired');
-                }
-                return res.json()
-            })
-            .then((data) => {
+            fetch('/result/results',requestOptions)
+            .then(res=>res.json())
+            .then(data=>{
                 setResults(data)
             })
-            .catch((err) => {
-                history.push('/')
-            })
-        }, [])
+            .catch(err=>console.log(err))
+        },[]
+    )
 
     const getAllResults=()=>{
         
@@ -94,7 +83,7 @@ const LoggedinHome=()=>{
 
     return (
         <div className="results container">
-            <h1>TwitterWatch</h1>
+            <h1>More data</h1>
             {
                 results.reverse().map(
                     (result, index)=>(
@@ -115,22 +104,22 @@ const LoggedinHome=()=>{
     )
 }
 
-const LoggedOutHome=()=>{
+const LoggedOutMoreData=()=>{
     return (
     <div className="home container">
-        <h1 className="heading">Welcome to TwitterWatch</h1>
+        <h1 className="heading">More data on the tag</h1>
         <Link to="/login" className="btn btn-primary btn-lg">Login</Link>
     </div>
     )
 }
 
-const HomePage=()=>{
+const MoreData=()=>{
     const [logged]=useAuth()
     return(
         <div>
-            {logged?<LoggedinHome/>:<LoggedOutHome/>}
+            {logged?<LoggedinMoreData/>:<LoggedOutMoreData/>}
         </div>
     )
 }
 
-export default HomePage
+export default MoreData

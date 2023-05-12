@@ -8,6 +8,8 @@ from users import user_ns
 from auth import auth_ns
 from excel_results import result_ns
 from flask_cors import CORS
+from flask import jsonify
+
 
 def create_app(config):
     app=Flask(__name__)
@@ -25,6 +27,10 @@ def create_app(config):
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
     api.add_namespace(result_ns)
+
+    @app.errorhandler(401)
+    def handle_401(error):
+        return jsonify(message="Session expired"), 401
 
     #export to terminal shell to interact with db
     @app.shell_context_processor
