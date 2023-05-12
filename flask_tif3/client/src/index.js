@@ -13,7 +13,7 @@ import HomePage from './components/Home';
 import LoginPage from './components/Login';
 import SignUp from './components/SignUp';
 import SearchTag from './components/SearchTag';
-import MoreData from './components/MoreData'
+import ImageModal from './components/ImageModal';
 
 
 const App=()=>{
@@ -27,8 +27,8 @@ const App=()=>{
                 <Route path="/login">
                     <LoginPage/>
                 </Route>
-                <Route path="/moredata">
-                    <MoreData/>
+                <Route path="/imagemodal">
+                    <ImageModal/>
                 </Route>
                 <Route path="/searchtag">
                     <SearchTag/>
