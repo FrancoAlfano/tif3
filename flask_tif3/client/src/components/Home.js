@@ -1,48 +1,60 @@
-import React, {useEffect, useState} from "react";
-import { Link, useHistory} from "react-router-dom";
-import { useAuth } from "../auth";
-import Result from "./Result"
-import ImageModal from './ImageModal'
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useAuth, authFetch, login } from "../auth";
+import Result from "./Result";
+import ImageModal from "./ImageModal";
 
-const LoggedinHome=()=>{
-    const [results, setResults]=useState([]);
-    let token = localStorage.getItem('REACT_TOKEN_AUTH_KEY')
-    const history = useHistory()
-    const imageUrl = '/images/pepsi_pie_chart_2023-05-11_20-26-48.png';
-    const [modalImageUrl, setModalImageUrl] = useState('');
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const openModal = () => {
-        setModalIsOpen(true);
-      };
+const LoggedinHome = () => {
+  const [results, setResults] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [ModalImageUrls, setModalImageUrls] = useState([]);
+  const imageUrls = ['/images/pepsi_pie_chart_2023-05-11_20-26-48.png', '/images/pepsi_word_cloud_2023-05-05_10-56-08.png'];
+  const token = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
+  const history = useHistory();
 
-    useEffect(
-        ()=>{
-            const requestOptions={
-                method:'GET',
-                headers:{
-                    'content-type':'application/json',
-                    'Authorization':`Bearer ${JSON.parse(token)}`
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await authFetch("/result/results");
+        if (response.status === 401 || response.status === 422) {
+            // Token expired, try refreshing the token
+            const refreshTokenResponse = await authFetch("/auth/refresh", {
+                method: "POST",
+                body: JSON.stringify({
+                refresh_token: JSON.parse(token).refresh_token,
+                }),
+            });
+            if (refreshTokenResponse.ok) {
+                const { access_token } = await refreshTokenResponse.json();
+                localStorage.setItem("REACT_TOKEN_AUTH_KEY", JSON.stringify(access_token));
+                // Retry the original request with the new token
+                const refreshedResponse = await authFetch("/result/results");
+                if (refreshedResponse.ok) {
+                const data = await refreshedResponse.json();
+                setResults(data);
+                } else {
+                throw new Error("Failed to fetch data after refreshing token");
                 }
+            } else {
+                // Token refresh failed, redirect to login page
+                throw new Error("Failed to refresh token");
             }
-            fetch('/result/results', requestOptions)
-            .then((res) => {
-                if (res.status === 401) {
-                    localStorage.removeItem('REACT_TOKEN_AUTH_KEY')
-                    throw new Error('Session expired');
-                }
-                else if (res.status === 422) {
-                    localStorage.removeItem('REACT_TOKEN_AUTH_KEY')
-                    throw new Error('Session expired');
-                }
-                return res.json()
-            })
-            .then((data) => {
-                setResults(data)
-            })
-            .catch((err) => {
-                history.push('/')
-            })
-        }, [])
+        } else {
+            const data = await response.json();
+            setResults(data);
+        }
+      } catch (err) {
+        localStorage.removeItem("REACT_TOKEN_AUTH_KEY");
+        history.push("/");
+      }
+    };
+
+    fetchData();
+  }, []);
 
     const getAllResults=()=>{
         
@@ -90,20 +102,20 @@ const LoggedinHome=()=>{
         };
       
         fetch(`/result/result/${id}`, requestOptions)
-          .then((res) => res.json())
-          .then((data) => {
-            setModalImageUrl(imageUrl);
+        .then((res) => res.json())
+        .then((data) => {
+            // Assuming the image URLs are available in `data.imageUrls` array
+            setModalImageUrls(imageUrls);
             setModalIsOpen(true);
             openModal();
-          })
-          .catch((err) => console.log(err));
-      };
-      
-      
+        })
+        .catch((err) => console.log(err));
+    };
 
       return (
-        <div className="results container">
+        <div className="container">
           <h1>TwitterWatch</h1>
+          <div className="results">
           {results.reverse().map((result, index) => (
             <Result
               key={index}
@@ -120,10 +132,11 @@ const LoggedinHome=()=>{
               }}
             />
           ))}
+          </div>
           {modalIsOpen && (
             <ImageModal
-              modalImageUrl={modalImageUrl}
-              closeModal={() => setModalIsOpen(false)}
+                modalImageUrls={ModalImageUrls}
+                closeModal={() => setModalIsOpen(false)}
             />
           )}
         </div>

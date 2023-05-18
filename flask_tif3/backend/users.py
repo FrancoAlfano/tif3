@@ -65,7 +65,12 @@ class UserResource(Resource):
         """Update user"""
         user_to_update=User.query.get_or_404(id)
         data=request.get_json()
-        user_to_update.update(data.get('username'), data.get('email'), data.get('password'), data.get('full_name'))
+        user_to_update.update(
+            data.get('username'),
+            data.get('email'),
+            data.get('password'),
+            data.get('full_name')
+        )
         return user_to_update
 
     @user_ns.marshal_with(user_model)

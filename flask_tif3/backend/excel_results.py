@@ -1,23 +1,16 @@
-import os
-import re
-import requests
 import pandas as pd
-from dotenv import load_dotenv
 from nltk import pos_tag
 from nltk.tokenize import TweetTokenizer
 from nltk.stem import WordNetLemmatizer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
-import re
-import statistics
-from decimal import Decimal as D
 from langdetect import detect
-from flask import Flask, jsonify, request, render_template, url_for, flash, redirect
-from flask_restx import Namespace, Resource, fields
 from models import Results
-from flask_jwt_extended import jwt_required, get_jwt_identity
 from plotters import plott
-
+from flask import jsonify, request
+from flask_restx import Namespace, Resource, fields
+from flask_jwt_extended import jwt_required, get_jwt_identity
+import cld3
 
 result_ns =Namespace("result", description="A namespace for results")
 
@@ -60,15 +53,15 @@ class ResultsResource(Resource):
        
         rm_urls = r'(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?'
         rm_hash = r'#'
-        #rm_usr_mention = r'\B\@([\w\-]+)'
         rm_usr_mention = r'@'
 
-        results = []
         df = pd.read_csv(f'../data/{tag}.csv')
-        #as the twitter api doesn't correctly filter english tweets, we will do it here
-        df['lang'] = df['text'].apply(lambda tweet: detect(tweet))
-        df = df[df['lang']=='en']
 
+        #as the twitter api doesn't correctly filter english tweets, we will do it here
+        df['lang'] = df['text'].apply(lambda tweet: cld3.get_language(tweet).language)
+        df = df[df['lang'] == 'en']
+
+        #apply regex to remove urls, hashes and user@ mentions
         df['text'] = df['text'].str.replace(rm_urls, '', regex=True)
         df['text'] = df['text'].str.replace(rm_hash, '', regex=True)
         df['text'] = df['text'].str.replace(rm_usr_mention, '', regex=True)
@@ -76,13 +69,14 @@ class ResultsResource(Resource):
 
         #remove stop words from column
         stop_words = set(stopwords.words('english'))
-        df['cleaned_stop_words'] = df["text"].apply(lambda x: ' '.join([word for word in x.split() if word not in (stop_words)]))
-
+        df['cleaned_stop_words'] = df["text"].apply(lambda x: ' '.
+            join([word for word in x.split() if word not in (stop_words)]))
+        
         # tokenize column
         tt = TweetTokenizer()
         tokenized_text = df['cleaned_stop_words'].apply(tt.tokenize)
         df["tokenized_text"] = tokenized_text
-
+        
         #apply pos tag, adjectives
         tagged_ok = []
         for row in df["tokenized_text"]:
@@ -130,12 +124,13 @@ class ResultsResource(Resource):
             negatives=negatives,
             neutrals=neutrals
         )
-
+        
         new_result.save()
+
+        #plot the word cloud and pie chart
         plott(positives, negatives, neutrals, lemmatized, tag)
 
         return jsonify({"message":"Search Complete!"})
-
 
 
 @result_ns.route('/result/<int:id>')

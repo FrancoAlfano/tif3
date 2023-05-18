@@ -1,10 +1,11 @@
 from flask_restx import Namespace, Resource, fields
 from models import User
 from werkzeug.security import generate_password_hash,check_password_hash
-from flask_jwt_extended import (JWTManager,
-                                create_access_token, create_refresh_token, jwt_required,
+from flask_jwt_extended import (create_access_token,
+                                create_refresh_token,
+                                jwt_required,
                                 get_jwt_identity)
-from flask import Flask, request, jsonify, make_response
+from flask import request, jsonify, make_response
 
 
 auth_ns = Namespace('auth', description="A namespace for authentication")

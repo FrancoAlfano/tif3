@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { Form, Button, Alert } from 'react-bootstrap'
 import { useForm } from 'react-hook-form'
+import { Link } from "react-router-dom"
+
 
 
 const SignUpPage =()=>{
@@ -11,7 +13,6 @@ const SignUpPage =()=>{
     const [alertVariant, setAlertVariant]=useState('')
 
     const submitForm = (data)=>{
-    
         if (data.password === data.confirmPassword){
             const body={
                 username:data.username,
@@ -74,7 +75,8 @@ const SignUpPage =()=>{
                             {...register("username",{required:true,maxLength:25})}
                         />
                         {errors.username && <p style={{color:"red"}}><small>Username is required</small></p>}
-                        {errors.username?.type==="maxLength"&&<p style={{color:"red"}}><small>Max characters are 25</small></p>}
+                        {errors.username?.type==="maxLength"
+                            &&<p style={{color:"red"}}><small>Max characters are 25</small></p>}
                     </Form.Group>
                     <br></br>
                     <Form.Group>
@@ -83,7 +85,8 @@ const SignUpPage =()=>{
                             {...register("email",{required:true,maxLength:80})}
                         />
                         {errors.email && <p style={{color:"red"}}><small>Email is required</small></p>}
-                        {errors.email?.type==="maxLength"&&<p style={{color:"red"}}><small>Max characters are 80</small></p>}
+                        {errors.email?.type==="maxLength"
+                            &&<p style={{color:"red"}}><small>Max characters are 80</small></p>}
                     </Form.Group>
                     <br></br>
                     <Form.Group>
@@ -92,7 +95,8 @@ const SignUpPage =()=>{
                             {...register("full_name",{required:true,maxLength:50})}
                         />
                         {errors.full_name && <p style={{color:"red"}}><small>Full name is required</small></p>}
-                        {errors.full_name?.type==="maxLength"&&<p style={{color:"red"}}><small>Max characters are 50</small></p>}
+                        {errors.full_name?.type==="maxLength"
+                            &&<p style={{color:"red"}}><small>Max characters are 50</small></p>}
                     </Form.Group>
                     <br></br>
                     <Form.Group>
@@ -101,7 +105,8 @@ const SignUpPage =()=>{
                             {...register("password",{required:true,minLength:8})}
                         />
                         {errors.password && <p style={{color:"red"}}><small>Password is required</small></p>}
-                        {errors.password?.type==="minLength"&&<p style={{color:"red"}}><small>Min characters are 8</small></p>}
+                        {errors.password?.type==="minLength"
+                            &&<p style={{color:"red"}}><small>Min characters are 8</small></p>}
                     </Form.Group>
                     <br></br>
                     <Form.Group>
@@ -109,8 +114,14 @@ const SignUpPage =()=>{
                         <Form.Control type="password" placeholder='Confirm password'
                             {...register("confirmPassword",{required:true,minLength:8,validate:true})}
                         />
-                        {errors.confirmPassword && <p style={{color:"red"}}><small>Confirm Password is required</small></p>}
-                        {errors.confirmPassword?.type==="minLength"&&<p style={{color:"red"}}><small>Min characters are 8</small></p>}
+                        {errors.confirmPassword && <p style={{color:"red"}}>
+                            <small>Confirm Password is required</small></p>}
+                        {errors.confirmPassword?.type==="minLength"
+                            &&<p style={{color:"red"}}><small>Min characters are 8</small></p>}
+                    </Form.Group>
+                    <br></br>
+                    <Form.Group>
+                        <small>Already have an account?, <Link to='/login'>Login</Link></small>
                     </Form.Group>
                     <br></br>
                     <Form.Group>

@@ -66,7 +66,8 @@ const LoginPage=()=>{
                         />
                     </Form.Group>
                     {errors.username && <p style={{color:'red'}}><small>Username is required</small></p>}
-                    {errors.username?.type === "maxLength" && <p style={{color:'red'}}><small>Max length is 25</small></p>}
+                    {errors.username?.type === "maxLength"
+                    && <p style={{color:'red'}}><small>Max length is 25</small></p>}
                     <br></br>
                     <Form.Group>
                         <Form.Label>Password</Form.Label>
@@ -75,7 +76,8 @@ const LoginPage=()=>{
                         />
                     </Form.Group>
                     {errors.password && <p style={{color:'red'}}><small>Password is required</small></p>}
-                    {errors.password?.type === "minLength" && <p style={{color:'red'}}><small>Min length is 8</small></p>}
+                    {errors.password?.type === "minLength"
+                    && <p style={{color:'red'}}><small>Min length is 8</small></p>}
                     <br></br>
                     <Form.Group>
                         <small>Don't have an account?, <Link to='/signup'>Sign Up</Link></small>
