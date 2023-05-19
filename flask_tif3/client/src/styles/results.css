@@ -6,4 +6,7 @@
 
 .result {
     margin-right: 10px; /* Add margin-right for spacing between cards */
+    margin-bottom: 10px;
+    min-width: 350px;
+
   }

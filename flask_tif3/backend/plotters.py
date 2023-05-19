@@ -26,6 +26,7 @@ def plott(positives,negatives,neutrals, lemmatized, tag):
        wordcloud = WordCloud(max_words=100, background_color="white").generate_from_frequencies(fdist)
        filename = f"graphs/{tag}_word_cloud_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".png"
        wordcloud.to_file(filename)
+       wrd_cloud = f"{tag}_word_cloud_" + datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + ".png"
 
        # Generate pie chart
        labels = ["Positive [{}%]".format(pos_percentage), "Neutral [{}%]".format(neu_percentage), "Negative [{}%]".format(neg_percentage)]
@@ -37,3 +38,6 @@ def plott(positives,negatives,neutrals, lemmatized, tag):
        plt.axis("equal")
        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
        plt.savefig(f'graphs/{tag}_pie_chart_{timestamp}.png', dpi=200)
+       p_chart = f'{tag}_pie_chart_{timestamp}.png'
+
+       return wrd_cloud, p_chart

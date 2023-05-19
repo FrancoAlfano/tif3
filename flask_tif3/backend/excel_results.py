@@ -50,7 +50,7 @@ class ResultsResource(Resource):
         data = request.get_json()
         tag=data.get('tag')
         username = get_jwt_identity()
-       
+
         rm_urls = r'(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?'
         rm_hash = r'#'
         rm_usr_mention = r'@'
@@ -133,7 +133,8 @@ class ResultsResource(Resource):
         new_result.save()
 
         #plot the word cloud and pie chart
-        plott(positives, negatives, neutrals, lemmatized, tag)
+        word_cloud, pie_chart =  plott(positives, negatives, neutrals, lemmatized, tag)
+        print("WORD CLOUD: ", word_cloud, " PIE CHART: ", pie_chart)
 
         return jsonify({"message":"Search Complete!"})
 
