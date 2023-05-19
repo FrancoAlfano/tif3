@@ -9,8 +9,6 @@ const LoggedinHome = () => {
   const [results, setResults] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [ModalImageUrls, setModalImageUrls] = useState([]);
-  const imageUrls = ['/images/pepsi_pie_chart_2023-05-11_20-26-48.png',
-    '/images/pepsi_word_cloud_2023-05-05_10-56-08.png'];
   const token = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
   const history = useHistory();
 
@@ -58,6 +56,8 @@ const LoggedinHome = () => {
     fetchData();
   }, []);
 
+
+    //Show all results
     const getAllResults=()=>{
         const requestOptions={
             method:'GET',
@@ -93,6 +93,7 @@ const LoggedinHome = () => {
         .catch(err=>console.log(err))
     }
 
+    //Show a modal with the images made from the search
     const moreResult = (id) => {
         const requestOptions = {
           method: 'GET',
@@ -105,10 +106,11 @@ const LoggedinHome = () => {
         fetch(`/result/result/${id}`, requestOptions)
         .then((res) => res.json())
         .then((data) => {
-            // Assuming the image URLs are available in `data.imageUrls` array
-            setModalImageUrls(imageUrls);
-            setModalIsOpen(true);
-            openModal();
+          const { word_cloud, pie_chart } = data;
+          const imageUrls = ["/images/"+pie_chart, "/images/"+word_cloud];
+          setModalImageUrls(imageUrls);
+          setModalIsOpen(true);
+          openModal();
         })
         .catch((err) => console.log(err));
     };
@@ -125,6 +127,8 @@ const LoggedinHome = () => {
               positives={result.positives}
               negatives={result.negatives}
               neutrals={result.neutrals}
+              word_cloud={result.word_cloud}
+              pie_chart={result.pie_chart}
               onDelete={() => {deleteResult(result.id)}}
               onMore={() => {moreResult(result.id)}}
             />

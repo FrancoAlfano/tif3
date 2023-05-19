@@ -23,6 +23,8 @@ result_model=result_ns.model(
         "positives":fields.Integer(),
         "negatives":fields.Integer(),
         "neutrals":fields.Integer(),
+        "word_cloud":fields.String(),
+        "pie_chart":fields.String()
     }
 )
 
@@ -122,19 +124,21 @@ class ResultsResource(Resource):
                 row["result"] = "Neutral"
                 neutrals += 1
 
+
+        #plot the word cloud and pie chart
+        word_cloud, pie_chart =  plott(positives, negatives, neutrals, lemmatized, tag)
+
         new_result=Results(
             tag= data.get('tag'),
             username=username,
             positives=positives,
             negatives=negatives,
-            neutrals=neutrals
+            neutrals=neutrals,
+            word_cloud=word_cloud,
+            pie_chart=pie_chart
         )
         
         new_result.save()
-
-        #plot the word cloud and pie chart
-        word_cloud, pie_chart =  plott(positives, negatives, neutrals, lemmatized, tag)
-        print("WORD CLOUD: ", word_cloud, " PIE CHART: ", pie_chart)
 
         return jsonify({"message":"Search Complete!"})
 
