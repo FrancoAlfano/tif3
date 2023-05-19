@@ -57,9 +57,14 @@ class ResultsResource(Resource):
 
         df = pd.read_csv(f'../data/{tag}.csv')
 
+        #tweets_pulled = df.shape[0]
+
         #as the twitter api doesn't correctly filter english tweets, we will do it here
         df['lang'] = df['text'].apply(lambda tweet: cld3.get_language(tweet).language)
         df = df[df['lang'] == 'en']
+
+        #deleting duplicated tweets
+        df = df.drop_duplicates(subset=('text'))
 
         #apply regex to remove urls, hashes and user@ mentions
         df['text'] = df['text'].str.replace(rm_urls, '', regex=True)

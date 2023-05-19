@@ -1,0 +1,29 @@
+
+.modal-content {
+	padding: 10px;
+	border-radius: 5px;
+  max-width: 350px;
+  max-height: 350px;
+	border: none;
+}
+
+.modal-title {
+  font-size: large;
+  text-align: center;
+  font-size: 50px;
+}
+
+.modal-header {
+	background: #e85e6c;
+	border-bottom: none;   
+	position: relative;
+	text-align: center;
+	margin: -10px -10px 0;
+	border-radius: 5px 5px 0 0;
+	padding: 35px;
+}
+
+.modal-body{
+  text-align: left;
+  font-size: 25px;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import { useAuth, authFetch, login } from "../auth";
+import { useAuth, authFetch } from "../auth";
 import Result from "./Result";
 import ImageModal from "./ImageModal";
 
@@ -8,7 +8,8 @@ const LoggedinHome = () => {
   const [results, setResults] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [ModalImageUrls, setModalImageUrls] = useState([]);
-  const imageUrls = ['/images/pepsi_pie_chart_2023-05-11_20-26-48.png', '/images/pepsi_word_cloud_2023-05-05_10-56-08.png'];
+  const imageUrls = ['/images/pepsi_pie_chart_2023-05-11_20-26-48.png',
+    '/images/pepsi_word_cloud_2023-05-05_10-56-08.png'];
   const token = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
   const history = useHistory();
 
@@ -57,7 +58,6 @@ const LoggedinHome = () => {
   }, []);
 
     const getAllResults=()=>{
-        
         const requestOptions={
             method:'GET',
             headers:{
@@ -124,12 +124,8 @@ const LoggedinHome = () => {
               positives={result.positives}
               negatives={result.negatives}
               neutrals={result.neutrals}
-              onDelete={() => {
-                deleteResult(result.id)
-              }}
-              onMore={() => {
-                moreResult(result.id)
-              }}
+              onDelete={() => {deleteResult(result.id)}}
+              onMore={() => {moreResult(result.id)}}
             />
           ))}
           </div>
