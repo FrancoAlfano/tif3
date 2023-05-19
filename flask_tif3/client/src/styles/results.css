@@ -1,0 +1,9 @@
+.results {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* or space-between */
+}
+
+.result {
+    margin-right: 10px; /* Add margin-right for spacing between cards */
+  }

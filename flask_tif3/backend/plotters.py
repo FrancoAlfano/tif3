@@ -6,6 +6,8 @@ import datetime
 
 
 def plott(positives,negatives,neutrals, lemmatized, tag):
+
+       plt.switch_backend('agg')
        #percentages
        total = positives + negatives + neutrals
        pos_percentage = round((positives / total)*100, 2)

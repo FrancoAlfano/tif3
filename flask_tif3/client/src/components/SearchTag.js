@@ -7,7 +7,7 @@ import PacmanLoader from 'react-spinners/PacmanLoader';
 import "../styles/searchTag.css"
 
 const LoggedInSearchTag = () => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [loadingInProgress, setLoading] = useState(false);
   const [error, setError] = useState(null); // New state for handling errors
   const [modalVisible, setModalVisible] = useState(false); // New state for controlling modal visibility
@@ -47,7 +47,6 @@ const LoggedInSearchTag = () => {
         setModalVisible(true); // Show the modal
       });
 
-    reset();
   };
 
   const closeModal = () => {

@@ -12,10 +12,6 @@
   max-width: 400px; /* Adjust the max-width value as needed */
 }
 
-.result {
-  margin-top: 20px;
-}
-
 .loader-container {
   width: 100%;
   height: 100vh;
@@ -47,10 +43,3 @@
   height: auto;
   max-width: 800px;
 }
-
-.results {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  

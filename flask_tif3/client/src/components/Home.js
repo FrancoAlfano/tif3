@@ -3,6 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuth, authFetch } from "../auth";
 import Result from "./Result";
 import ImageModal from "./ImageModal";
+import "../styles/results.css"
 
 const LoggedinHome = () => {
   const [results, setResults] = useState([]);
@@ -35,8 +36,8 @@ const LoggedinHome = () => {
                 // Retry the original request with the new token
                 const refreshedResponse = await authFetch("/result/results");
                 if (refreshedResponse.ok) {
-                const data = await refreshedResponse.json();
-                setResults(data);
+                  const data = await refreshedResponse.json();
+                  setResults(data);
                 } else {
                 throw new Error("Failed to fetch data after refreshing token");
                 }
@@ -73,8 +74,8 @@ const LoggedinHome = () => {
         .catch(err=>console.log(err))
     }
 
+    //Delete a search
     const deleteResult=(id)=>{
-
         const requestOptions={
             method:'DELETE',
             headers:{
