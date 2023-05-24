@@ -124,9 +124,14 @@ class ResultsResource(Resource):
                 row["result"] = "Neutral"
                 neutrals += 1
 
+        df.to_csv("taggedData")
+
 
         #plot the word cloud and pie chart
-        word_cloud, pie_chart =  plott(positives, negatives, neutrals, lemmatized, tag)
+        word_cloud, pie_chart, fdist =  plott(positives, negatives, neutrals, lemmatized, tag)
+
+        top_5_words = fdist.most_common(5)
+        print(top_5_words)
 
         new_result=Results(
             tag= data.get('tag'),
