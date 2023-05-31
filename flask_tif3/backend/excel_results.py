@@ -124,9 +124,6 @@ class ResultsResource(Resource):
                 row["result"] = "Neutral"
                 neutrals += 1
 
-        df.to_csv("taggedData")
-
-
         #plot the word cloud and pie chart
         word_cloud, pie_chart, fdist =  plott(positives, negatives, neutrals, lemmatized, tag)
 
