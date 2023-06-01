@@ -24,7 +24,8 @@ result_model=result_ns.model(
         "negatives":fields.Integer(),
         "neutrals":fields.Integer(),
         "word_cloud":fields.String(),
-        "pie_chart":fields.String()
+        "pie_chart":fields.String(),
+        "frequency":fields.String()
     }
 )
 
@@ -125,10 +126,7 @@ class ResultsResource(Resource):
                 neutrals += 1
 
         #plot the word cloud and pie chart
-        word_cloud, pie_chart, fdist =  plott(positives, negatives, neutrals, lemmatized, tag)
-
-        top_5_words = fdist.most_common(5)
-        print(top_5_words)
+        word_cloud, pie_chart, frequency =  plott(positives, negatives, neutrals, lemmatized, tag)
 
         new_result=Results(
             tag= data.get('tag'),
@@ -137,7 +135,8 @@ class ResultsResource(Resource):
             negatives=negatives,
             neutrals=neutrals,
             word_cloud=word_cloud,
-            pie_chart=pie_chart
+            pie_chart=pie_chart,
+            frequency=frequency
         )
         
         new_result.save()

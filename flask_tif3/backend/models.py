@@ -50,6 +50,7 @@ class Results:
     neutrals:integer
     word_cloud:string
     pie_chart:string
+    frequency:string
 """
 
 class Results(db.Model):
@@ -61,6 +62,7 @@ class Results(db.Model):
     neutrals = db.Column(db.Integer, nullable=False)
     word_cloud = db.Column(db.String(50), nullable=False)
     pie_chart = db.Column(db.String(50), nullable=False)
+    frequency = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
         """

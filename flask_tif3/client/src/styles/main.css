@@ -43,3 +43,29 @@
   height: auto;
   max-width: 800px;
 }
+
+.csv-content {
+  text-align: center;
+}
+
+.csv-content__heading {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.csv-content__pre {
+  background-color: #f2f2f2;
+  padding: 10px;
+  border-radius: 4px;
+  display: inline-block;
+  text-align: left;
+  font-family: monospace;
+  white-space: pre-wrap;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.modal-buttons {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

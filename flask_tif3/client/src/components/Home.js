@@ -11,7 +11,9 @@ const LoggedinHome = () => {
   const [ModalImageUrls, setModalImageUrls] = useState([]);
   const token = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
   const history = useHistory();
-  const [modalIndex, setModalIndex] = useState(null); // New state variable to store the modal trigger index
+  const [modalIndex, setModalIndex] = useState(null);
+  const [csvContent, setCSVContent] = useState('');
+
 
 
   const openModal = () => {
@@ -108,14 +110,26 @@ const LoggedinHome = () => {
         fetch(`/result/result/${results[id].id}`, requestOptions)
         .then((res) => res.json())
         .then((data) => {
-          const { word_cloud, pie_chart } = data;
+          const { word_cloud, pie_chart, frequency } = data;
           const imageUrls = ["/images/"+pie_chart, "/images/"+word_cloud];
+          const frequencyUrl = ["/images/"+frequency]
           setModalImageUrls(imageUrls);
-          setModalIndex(id); // Set the modal trigger index
+          setModalIndex(id);
+          setModalIsOpen(true);
+          openModal();
+        fetch(frequencyUrl)
+        .then((res) => res.text())
+        .then((csvContent) => {
+          setCSVContent(csvContent); // Update the state with the CSV content
+          setModalImageUrls(imageUrls);
+          setModalIndex(id);
           setModalIsOpen(true);
           openModal();
         })
         .catch((err) => console.log(err));
+        
+    })
+    .catch((err) => console.log(err));
     };
 
       return (
@@ -132,6 +146,7 @@ const LoggedinHome = () => {
               neutrals={result.neutrals}
               word_cloud={result.word_cloud}
               pie_chart={result.pie_chart}
+              frequency={result.frequency}
               onDelete={() => {deleteResult(result.id)}}
               onMore={() => {moreResult(index)}}
             />
@@ -139,14 +154,15 @@ const LoggedinHome = () => {
           </div>
           {modalIsOpen && (
             <ImageModal
-                modalImageUrls={ModalImageUrls}
-                closeModal={() => {
-                  setModalIsOpen(false)
-                  setModalIndex(null)
-                }
-              }
+              modalImageUrls={ModalImageUrls}
+              closeModal={() => {
+                setModalIsOpen(false);
+                setModalIndex(null);
+              }}
+              csvContent={csvContent} // Pass the csvContent prop
             />
           )}
+
         </div>
       );
     };

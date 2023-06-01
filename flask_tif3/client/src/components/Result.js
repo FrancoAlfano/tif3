@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
 
-const Result = ({ username, tag, positives, negatives, neutrals,word_cloud, pie_chart, onDelete, onMore }) => {
+const Result = ({ username, tag, positives, negatives, neutrals, onDelete, onMore }) => {
   return (
     <Card className="result">
       <Card.Body>
