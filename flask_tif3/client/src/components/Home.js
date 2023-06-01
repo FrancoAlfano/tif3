@@ -11,6 +11,8 @@ const LoggedinHome = () => {
   const [ModalImageUrls, setModalImageUrls] = useState([]);
   const token = localStorage.getItem("REACT_TOKEN_AUTH_KEY");
   const history = useHistory();
+  const [modalIndex, setModalIndex] = useState(null); // New state variable to store the modal trigger index
+
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -103,12 +105,13 @@ const LoggedinHome = () => {
           },
         };
       
-        fetch(`/result/result/${id}`, requestOptions)
+        fetch(`/result/result/${results[id].id}`, requestOptions)
         .then((res) => res.json())
         .then((data) => {
           const { word_cloud, pie_chart } = data;
           const imageUrls = ["/images/"+pie_chart, "/images/"+word_cloud];
           setModalImageUrls(imageUrls);
+          setModalIndex(id); // Set the modal trigger index
           setModalIsOpen(true);
           openModal();
         })
@@ -130,14 +133,18 @@ const LoggedinHome = () => {
               word_cloud={result.word_cloud}
               pie_chart={result.pie_chart}
               onDelete={() => {deleteResult(result.id)}}
-              onMore={() => {moreResult(result.id)}}
+              onMore={() => {moreResult(index)}}
             />
           ))}
           </div>
           {modalIsOpen && (
             <ImageModal
                 modalImageUrls={ModalImageUrls}
-                closeModal={() => setModalIsOpen(false)}
+                closeModal={() => {
+                  setModalIsOpen(false)
+                  setModalIndex(null)
+                }
+              }
             />
           )}
         </div>
