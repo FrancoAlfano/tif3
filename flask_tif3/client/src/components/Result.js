@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
 
-const Result = ({ username, tag, positives, negatives, neutrals, onDelete, onMore }) => {
+const Result = ({ username, tag, positives, negatives, neutrals, onDelete, onMore, onCompare }) => {
   return (
     <Card className="result">
       <Card.Body>
@@ -15,6 +15,8 @@ const Result = ({ username, tag, positives, negatives, neutrals, onDelete, onMor
         <Button variant="danger" onClick={onDelete}>Delete</Button>
         {'  '}
         <Button variant="secondary" onClick={onMore}>More data</Button>
+        {'  '}
+        <Button variant="secondary" onClick={onCompare}>Compare</Button>
       </Card.Body>
     </Card>
   );

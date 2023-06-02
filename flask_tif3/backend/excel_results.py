@@ -115,10 +115,10 @@ class ResultsResource(Resource):
             row["neutral"] = analisis["neu"]
             row["positive"] = analisis["pos"]
             # fine tune what is considered positive or negative
-            if analisis['compound'] > 0.6 :
+            if analisis['compound'] >= 0.05 :
                 row["result"] = "Positive"
                 positives += 1
-            elif analisis['compound'] < 0.3:
+            elif analisis['compound'] <= -0.05:
                 row["result"] = "Negative"
                 negatives += 1
             else :
