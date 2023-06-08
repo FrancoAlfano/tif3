@@ -29,7 +29,9 @@ result_model=result_ns.model(
         "neutrals":fields.Integer(),
         "word_cloud":fields.String(),
         "pie_chart":fields.String(),
-        "frequency":fields.String()
+        "frequency":fields.String(),
+        "start_date":fields.String(),
+        "end_date":fields.String()
     }
 )
 
@@ -57,6 +59,8 @@ class ResultsResource(Resource):
         load_dotenv()
         data = request.get_json()
         tag=data.get('tag')
+        start_date=data.get('start_date')
+        end_date=data.get('end_date')
         username = get_jwt_identity()
         
         def get_data(url,params, tag):
@@ -75,8 +79,8 @@ class ResultsResource(Resource):
                     token = meta_data['next_token']
                     params = {
                         'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
-                        #'start_time': "2021-10-26T00:00:00Z",
-                        #'end_time': '2021-10-30T00:00:00Z',
+                        'start_time': start_date+"T00:00:00Z",
+                        'end_time': end_date+'T00:00:00Z',
                         'next_token':token,
                         'max_results':100
                     }
@@ -87,8 +91,8 @@ class ResultsResource(Resource):
 
         params = {
             'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
-            #'start_time': "2021-10-26T00:00:00Z",
-            #'end_time': '2021-10-30T00:00:00Z',
+            'start_time': start_date+"T00:00:00Z",
+            'end_time': end_date+'T00:00:00Z',
             'max_results': 100
         }
 
@@ -177,7 +181,9 @@ class ResultsResource(Resource):
             neutrals=neutrals,
             word_cloud=word_cloud,
             pie_chart=pie_chart,
-            frequency=frequency
+            frequency=frequency,
+            start_date=start_date,
+            end_date=end_date
         )
         
         new_result.save()

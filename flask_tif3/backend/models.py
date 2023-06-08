@@ -63,6 +63,8 @@ class Results(db.Model):
     word_cloud = db.Column(db.String(50), nullable=False)
     pie_chart = db.Column(db.String(50), nullable=False)
     frequency = db.Column(db.String(50), nullable=False)
+    start_date = db.Column(db.String(50), nullable=False)
+    end_date = db.Column(db.String(50), nullable=False)
 
     def __repr__(self):
         """

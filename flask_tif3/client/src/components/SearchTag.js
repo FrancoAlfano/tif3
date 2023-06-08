@@ -19,6 +19,8 @@ const LoggedInSearchTag = () => {
     const body = {
       tag: data.tag,
       username: data.username,
+      start_date: data.start_date,
+      end_date: data.end_date
     };
 
     const requestOptions = {
@@ -71,6 +73,7 @@ const LoggedInSearchTag = () => {
             )}
             <form>
               <Form.Group>
+              <br></br>
                 <Form.Label>Insert tag: </Form.Label>
                 <Form.Control
                   type="text"
@@ -83,12 +86,40 @@ const LoggedInSearchTag = () => {
                     <small>Tag is required</small>
                   </p>
                 )}
+                <br></br>
                 {errors.tag?.type === 'maxLength' && (
                   <p style={{ color: 'red' }}>
                     <small>Max characters are 10</small>
                   </p>
                 )}
               </Form.Group>
+              
+              <Form.Group>
+                <Form.Label>Select date up to 7 days ago:</Form.Label>
+                <Form.Control
+                  type="date"
+                  {...register('start_date', { required: true })}
+                />
+                {errors.start_date && (
+                  <p style={{ color: 'red' }}>
+                    <small>Date is required</small>
+                  </p>
+                )}
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Select end date:</Form.Label>
+                <Form.Control
+                  type="date"
+                  {...register('end_date', { required: true })}
+                />
+                {errors.end_date && (
+                  <p style={{ color: 'red' }}>
+                    <small>Date is required</small>
+                  </p>
+                )}
+              </Form.Group>
+              
               <br />
               <Form.Group>
                 <Button as="sub" variant="primary" onClick={handleSubmit(submitForm)}>

@@ -166,6 +166,8 @@ const LoggedinHome = () => {
               word_cloud={result.word_cloud}
               pie_chart={result.pie_chart}
               frequency={result.frequency}
+              start_date={result.start_date}
+              end_date={result.end_date}
               onDelete={() => {deleteResult(result.id)}}
               onMore={() => {moreResult(index)}}
               onCompare={() => {compare(index)}}
