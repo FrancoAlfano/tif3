@@ -17,7 +17,7 @@ from decimal import Decimal as D
 
 load_dotenv()
 
-def get_data(url,params):
+def get_data(url,params, tag):
     results = []
     for _ in range(100):
         response = requests.get(url, headers=headers, params=params)
@@ -32,7 +32,7 @@ def get_data(url,params):
         else:
             token = meta_data['next_token']
             params = {
-                'query': 'to:twitter OR #twitter OR @twitter -is:retweet lang:en',
+                'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
                 #'query': 'to:kfc OR #kfc OR @kfc -is:retweet lang:en',
                 #'query': '#pathofexile OR #poe @zizaran OR @Steelmage2 OR @MathilExists -is:retweet lang:en',
                 #'query': 'from:pathofexile -is:retweet lang:en',
@@ -47,8 +47,10 @@ def get_data(url,params):
 bearer_token = os.environ.get("Bearer")
 url ="https://api.twitter.com/2/tweets/search/recent"
 
+tag = input("enter tag: ")
+
 params = {
-    'query': 'to:twitter OR #twitter OR @twitter -is:retweet lang:en',
+    'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
     #'query': 'to:kfc OR #kfc OR @kfc -is:retweet lang:en',
     #'query': '#pathofexile OR #poe @zizaran OR @Steelmage2 OR @MathilExists -is:retweet lang:en',
     #'query': 'from:pathofexile -is:retweet lang:en',
@@ -68,14 +70,14 @@ rm_hash = r'#'
 #rm_usr_mention = r'\B\@([\w\-]+)'
 rm_usr_mention = r'@'
 
-df = get_data(url, params)
+df = get_data(url, params, tag)
 df['text'] = df['text'].str.replace(rm_urls, '', regex=True)
 df['text'] = df['text'].str.replace(rm_hash, '', regex=True)
 df['text'] = df['text'].str.replace(rm_usr_mention, '', regex=True)
 df['text'] = df['text'].str.lower()
 
 #df.to_csv('kfc.csv')
-df.to_csv('twitter.csv')
+df.to_csv(f'./wave3/{tag}.csv')
 
 
 """ 

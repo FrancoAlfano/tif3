@@ -6,9 +6,10 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from users import user_ns
 from auth import auth_ns
-from excel_results import result_ns
 from flask_cors import CORS
 from flask import jsonify
+#from excel_results import result_ns
+from api_results import result_ns
 
 
 def create_app(config):
