@@ -92,6 +92,7 @@ class ResultsResource(Resource):
                     token = meta_data['next_token']
                     params = {
                         'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
+                        #'query': f'to:{tag} OR @{tag} -is:retweet lang:en',
                         'start_time': start_date + "T00:00:00Z",
                         'end_time': end_date + 'T00:00:00Z',
                         'next_token': token,
@@ -108,6 +109,7 @@ class ResultsResource(Resource):
 
         params = {
             'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
+            #'query': f'to:{tag} OR @{tag} -is:retweet lang:en',
             'start_time': start_date+"T00:00:00Z",
             'end_time': end_date+'T00:00:00Z',
             'max_results': 100
