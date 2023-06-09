@@ -64,6 +64,7 @@ class ResultsResource(Resource):
         end_date=data.get('end_date')
         username = get_jwt_identity()
         max_tweets=int(data.get('max_tweets'))
+        tags = tag.split()
         
         def get_data(url, params, tag, max_tweets):
             results = []

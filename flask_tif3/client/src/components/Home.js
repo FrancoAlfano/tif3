@@ -168,6 +168,7 @@ const LoggedinHome = () => {
               frequency={result.frequency}
               start_date={result.start_date}
               end_date={result.end_date}
+              max_tweets={result.max_tweets}
               onDelete={() => {deleteResult(result.id)}}
               onMore={() => {moreResult(index)}}
               onCompare={() => {compare(index)}}

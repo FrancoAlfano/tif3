@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
 
-const Result = ({ username, tag, positives, negatives, neutrals, start_date, end_date, onDelete, onMore }) => {
+const Result = ({ username, tag, positives, negatives, neutrals, start_date, end_date, max_tweets, onDelete, onMore }) => {
   const startParts = start_date.split("-");
   const endParts = end_date.split("-");
   const formattedStartDate = startParts.reverse().join("-");
@@ -15,6 +15,7 @@ const Result = ({ username, tag, positives, negatives, neutrals, start_date, end
         <p>Number of positive words: {positives}</p>
         <p>Number of negative words: {negatives}</p>
         <p>Number of neutral words: {neutrals}</p>
+        <p>Total number of tweets pulled: {max_tweets}</p>
         <p>Total number of tweets analyzed: {positives + negatives + neutrals}</p>
         <p>Start date: {formattedStartDate}</p>
         <p>End date: {formattedEndDate}</p>

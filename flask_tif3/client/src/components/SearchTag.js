@@ -14,13 +14,23 @@ const LoggedInSearchTag = () => {
   const token = localStorage.getItem('REACT_TOKEN_AUTH_KEY');
   const [serverResponse, setServerResponse] = useState('');
 
+  // Calculate the date one week ago
+  const currentDate = new Date();
+  const oneWeekAgo = new Date(currentDate.getTime() - 6 * 24 * 60 * 60 * 1000);
+  const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
+
+  // Set the default values for start_date and end_date
+  const defaultStartDate = formattedOneWeekAgo;
+  const defaultEndDate = currentDate.toISOString().split('T')[0];
+
   const submitForm = (data) => {
     setLoading(true);
     const body = {
       tag: data.tag,
       username: data.username,
       start_date: data.start_date,
-      end_date: data.end_date
+      end_date: data.end_date,
+      max_tweets: data.max_tweets
     };
 
     const requestOptions = {
@@ -78,7 +88,7 @@ const LoggedInSearchTag = () => {
                 <Form.Control
                   type="text"
                   placeholder="Twitter tag #"
-                  {...register('tag', { required: true, maxLength: 10 })}
+                  {...register('tag', { required: true, maxLength: 20 })}
                   onKeyDown={handleKeyDown}
                 />
                 {errors.tag && (
@@ -89,16 +99,34 @@ const LoggedInSearchTag = () => {
                 <br></br>
                 {errors.tag?.type === 'maxLength' && (
                   <p style={{ color: 'red' }}>
-                    <small>Max characters are 10</small>
+                    <small>Max characters are 20</small>
                   </p>
                 )}
               </Form.Group>
-              
               <Form.Group>
-                <Form.Label>Select date up to 7 days ago:</Form.Label>
+                <Form.Label>Number of tweets:</Form.Label>
+                <Form.Control
+                  type="number"
+                  {...register('max_tweets', { required: true, min: 1, max: 10000 })}
+                />
+                {errors.max_tweets && errors.max_tweets.type === 'required' && (
+                  <p style={{ color: 'red' }}>
+                    <small>Number of tweets is required</small>
+                  </p>
+                )}
+                {errors.max_tweets && errors.max_tweets.type === 'max' && (
+                  <p style={{ color: 'red' }}>
+                    <small>Maximum number of tweets is 10,000</small>
+                  </p>
+                )}
+              </Form.Group>
+              <br></br>
+              <Form.Group>
+                <Form.Label>Select date up to 6 days ago:</Form.Label>
                 <Form.Control
                   type="date"
                   {...register('start_date', { required: true })}
+                  defaultValue={defaultStartDate}
                 />
                 {errors.start_date && (
                   <p style={{ color: 'red' }}>
@@ -112,6 +140,8 @@ const LoggedInSearchTag = () => {
                 <Form.Control
                   type="date"
                   {...register('end_date', { required: true })}
+                  defaultValue={defaultEndDate}
+                  
                 />
                 {errors.end_date && (
                   <p style={{ color: 'red' }}>
