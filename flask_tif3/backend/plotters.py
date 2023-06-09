@@ -38,8 +38,6 @@ def plott(positives, negatives, neutrals, lemmatized, tag):
     df_fdist.index.name = 'Term'
     df_fdist.sort_values(by=['Frequency'], inplace=True, ascending=False)
     top_10_words = df_fdist.head(10)
-    freq_file_name = f"{tag}_frequency_{timestamp}.csv"
-    top_10_words.to_csv("/home/franco/universidad/tif3/flask_tif3/client/public/images/"+freq_file_name)
 
     # Move the generated images to the desired location
     final_location = "/home/franco/universidad/tif3/flask_tif3/client/public/images/"
@@ -91,4 +89,4 @@ def plott(positives, negatives, neutrals, lemmatized, tag):
     shutil.move(wrd_cloud, final_wrd_cloud)
     shutil.move(p_chart, final_p_chart)
 
-    return filename, pie_filename, freq_file_name, bar_chart_filename
+    return filename, pie_filename, bar_chart_filename

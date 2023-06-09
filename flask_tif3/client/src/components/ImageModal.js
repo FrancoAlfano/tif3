@@ -24,37 +24,13 @@ const ImageModal = ({ modalImageUrls, closeModal, csvContent }) => {
           <button onClick={previousTab} disabled={currentTabIndex === 0}>
             Previous
           </button>
-          <button onClick={nextTab} disabled={currentTabIndex === modalImageUrls.length}>
+          <button onClick={nextTab} disabled={currentTabIndex === modalImageUrls.length - 1}>
             Next
           </button>
           </div>
         </div>
         <div className="tab-content">
-          {isImageTab ? (
             <img src={currentContent} alt="" className="modal-image" />
-          ) : (
-            <div className="csv-content">
-            <h2 className="csv-content__heading">Frequency</h2>
-            <table className="csv-content__table">
-              <thead>
-                <tr>
-                  {rows[0].map((header, index) => (
-                    <th key={index}>{header}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.slice(1).map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {row.map((cell, cellIndex) => (
-                      <td key={cellIndex}>{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          )}
         </div>
         <div className='modal-buttons'>
           <button onClick={closeModal}>Close Modal</button>

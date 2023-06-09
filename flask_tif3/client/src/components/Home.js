@@ -109,23 +109,11 @@ const LoggedinHome = () => {
         .then((res) => res.json())
         .then((data) => {
           const { word_cloud, pie_chart, frequency } = data;
-          const imageUrls = ["/images/"+pie_chart, "/images/"+word_cloud];
-          const frequencyUrl = ["/images/"+frequency]
+          const imageUrls = ["/images/"+pie_chart, "/images/"+word_cloud, "/images/"+frequency];
           setModalImageUrls(imageUrls);
           setModalIndex(id);
           setModalIsOpen(true);
           openModal();
-        fetch(frequencyUrl)
-        .then((res) => res.text())
-        .then((csvContent) => {
-          setCSVContent(csvContent); // Update the state with the CSV content
-          setModalImageUrls(imageUrls);
-          setModalIndex(id);
-          setModalIsOpen(true);
-          openModal();
-        })
-        .catch((err) => console.log(err));
-        
     })
     .catch((err) => console.log(err));
     };
