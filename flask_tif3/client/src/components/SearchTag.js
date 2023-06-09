@@ -18,7 +18,7 @@ const LoggedInSearchTag = () => {
   const currentDate = new Date();
   const oneWeekAgo = new Date(currentDate.getTime() - 6 * 24 * 60 * 60 * 1000);
   const formattedOneWeekAgo = oneWeekAgo.toISOString().split('T')[0];
-
+  
   // Set the default values for start_date and end_date
   const defaultStartDate = formattedOneWeekAgo;
   const defaultEndDate = currentDate.toISOString().split('T')[0];
@@ -127,6 +127,8 @@ const LoggedInSearchTag = () => {
                   type="date"
                   {...register('start_date', { required: true })}
                   defaultValue={defaultStartDate}
+                  min={defaultStartDate}
+                  max={defaultEndDate}
                 />
                 {errors.start_date && (
                   <p style={{ color: 'red' }}>
@@ -141,15 +143,15 @@ const LoggedInSearchTag = () => {
                   type="date"
                   {...register('end_date', { required: true })}
                   defaultValue={defaultEndDate}
-                  
+                  min={defaultStartDate}
+                  max={defaultEndDate}
                 />
                 {errors.end_date && (
                   <p style={{ color: 'red' }}>
                     <small>Date is required</small>
                   </p>
                 )}
-              </Form.Group>
-              
+              </Form.Group>             
               <br />
               <Form.Group>
                 <Button as="sub" variant="primary" onClick={handleSubmit(submitForm)}>
