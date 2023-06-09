@@ -65,6 +65,7 @@ class Results(db.Model):
     frequency = db.Column(db.String(50), nullable=False)
     start_date = db.Column(db.String(50), nullable=False)
     end_date = db.Column(db.String(50), nullable=False)
+    max_tweets = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         """

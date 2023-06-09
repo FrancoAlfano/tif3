@@ -31,7 +31,8 @@ result_model=result_ns.model(
         "pie_chart":fields.String(),
         "frequency":fields.String(),
         "start_date":fields.String(),
-        "end_date":fields.String()
+        "end_date":fields.String(),
+        "max_tweets": fields.Integer()
     }
 )
 
@@ -62,29 +63,45 @@ class ResultsResource(Resource):
         start_date=data.get('start_date')
         end_date=data.get('end_date')
         username = get_jwt_identity()
+        max_tweets=int(data.get('max_tweets'))
         
-        def get_data(url,params, tag):
+        def get_data(url, params, tag, max_tweets):
             results = []
-            for _ in range(100):
+            remaining_tweets = max_tweets
+
+            for _ in range(max_tweets // 100):
+                if remaining_tweets <= 0:
+                    break
                 response = requests.get(url, headers=headers, params=params)
-                # Generar excepción si la respuesta no es exitosa
+                # Generate an exception if the response is not successful
                 if response.status_code != 200:
                     raise Exception(response.status_code, response.text)
                 data = response.json()['data']
                 meta_data = dict(response.json())['meta']
+                tweets_received = len(data)
+                
+                if tweets_received >= remaining_tweets:
+                    data = data[:remaining_tweets]
+                
                 results.append(pd.json_normalize(data))
+                remaining_tweets -= tweets_received
+
                 if 'next_token' not in meta_data:
                     break
                 else:
                     token = meta_data['next_token']
                     params = {
                         'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
-                        'start_time': start_date+"T00:00:00Z",
-                        'end_time': end_date+'T00:00:00Z',
-                        'next_token':token,
-                        'max_results':100
+                        'start_time': start_date + "T00:00:00Z",
+                        'end_time': end_date + 'T00:00:00Z',
+                        'next_token': token,
+                        'max_results': 100
                     }
-            return pd.concat(results)
+
+            df = pd.concat(results)
+            actual_tweet_count = len(df)
+
+            return df, actual_tweet_count
 
         bearer_token = os.environ.get("Bearer")
         url ="https://api.twitter.com/2/tweets/search/recent"
@@ -101,7 +118,7 @@ class ResultsResource(Resource):
             "User-Agent":"v2FullArchiveSearchPython"
         }
 
-        df = get_data(url, params, tag)
+        df, actual_tweet_count = get_data(url, params, tag, max_tweets)
 
         rm_urls = r'(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?'
         rm_hash = r'#'
@@ -183,7 +200,8 @@ class ResultsResource(Resource):
             pie_chart=pie_chart,
             frequency=frequency,
             start_date=start_date,
-            end_date=end_date
+            end_date=end_date,
+            max_tweets=actual_tweet_count
         )
         
         new_result.save()
