@@ -41,32 +41,54 @@ def plott(positives, negatives, neutrals, lemmatized, tag):
     freq_file_name = f"{tag}_frequency_{timestamp}.csv"
     top_10_words.to_csv("/home/franco/universidad/tif3/flask_tif3/client/public/images/"+freq_file_name)
 
+    # Move the generated images to the desired location
+    final_location = "/home/franco/universidad/tif3/flask_tif3/client/public/images/"
+    temp_dir = tempfile.mkdtemp()  # Create a temporary directory
 
     # Generate word cloud
     wordcloud = WordCloud(width=800, height=400, background_color="white").generate_from_frequencies(fdist)
     filename = f"{tag}_word_cloud_{timestamp}.png"
-    temp_dir = tempfile.mkdtemp()  # Create a temporary directory
     temp_filename = os.path.join(temp_dir, filename)
     wordcloud.to_file(temp_filename)
     wrd_cloud = temp_filename
 
+    # Bar chart for word frequencies
+    plt.figure(figsize=(10, 6))
+    plt.bar(top_10_words.index, top_10_words['Frequency'])
+    plt.xlabel('Term')
+    plt.ylabel('Frequency')
+    plt.title('Top 10 Word Frequencies')
+    plt.xticks(rotation=45)
+
+    # Add labels for each bar
+    for i, freq in enumerate(top_10_words['Frequency']):
+        plt.text(i, freq, str(freq), ha='center', va='bottom')
+
+    # Save the bar chart
+    bar_chart_filename = f"{tag}_bar_chart_{timestamp}.png"
+    temp_bar_chart_filename = os.path.join(temp_dir, bar_chart_filename)
+    plt.savefig(temp_bar_chart_filename, dpi=200)
+    bar_chart_path = os.path.join(final_location, bar_chart_filename)
+    shutil.move(temp_bar_chart_filename, bar_chart_path)
+
     # Generate pie chart
+    plt.figure()  # Create a new figure
     plt.pie([positives, neutrals, negatives], colors=["yellowgreen", "blue", "red"], startangle=90)
     plt.legend(["Positive [{}%]".format(pos_percentage),
                 "Neutral [{}%]".format(neu_percentage),
                 "Negative [{}%]".format(neg_percentage)])
     plt.title(f"Sentiment Analysis Result for keyword= {tag}")
     plt.axis("equal")
+
     pie_filename = f"{tag}_pie_chart_{timestamp}.png"
     temp_pie_filename = os.path.join(temp_dir, pie_filename)
     plt.savefig(temp_pie_filename, dpi=200)
     p_chart = temp_pie_filename
 
-    # Move the generated images to the desired location
-    final_location = "/home/franco/universidad/tif3/flask_tif3/client/public/images/"
+    # Move the remaining generated images to the desired location
     final_wrd_cloud = os.path.join(final_location, filename)
     final_p_chart = os.path.join(final_location, pie_filename)
     shutil.move(wrd_cloud, final_wrd_cloud)
     shutil.move(p_chart, final_p_chart)
 
-    return filename, pie_filename, freq_file_name
+    return filename, pie_filename, freq_file_name, bar_chart_filename

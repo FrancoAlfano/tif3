@@ -191,7 +191,8 @@ class ResultsResource(Resource):
                 neutrals += 1
 
         #plot the word cloud and pie chart
-        word_cloud, pie_chart, frequency =  plott(positives, negatives, neutrals, lemmatized, tag)
+        word_cloud, pie_chart, frequency, bar_chart =  plott(positives, negatives, neutrals, lemmatized, tag)
+        print(bar_chart)
 
         new_result=Results(
             tag= data.get('tag'),
