@@ -21,10 +21,10 @@ const ImageModal = ({ modalImageUrls, closeModal, csvContent }) => {
       <div className="modal-container">
         <div className="tab-navigation">
           <div className='modal-buttons'>
-          <button onClick={previousTab} disabled={currentTabIndex === 0}>
+          <button className='modal-button' onClick={previousTab} disabled={currentTabIndex === 0}>
             Previous
           </button>
-          <button onClick={nextTab} disabled={currentTabIndex === modalImageUrls.length - 1}>
+          <button onClick={nextTab} className='modal-button' disabled={currentTabIndex === modalImageUrls.length - 1}>
             Next
           </button>
           </div>
@@ -32,8 +32,9 @@ const ImageModal = ({ modalImageUrls, closeModal, csvContent }) => {
         <div className="tab-content">
             <img src={currentContent} alt="" className="modal-image" />
         </div>
+        <br></br>
         <div className='modal-buttons'>
-          <button onClick={closeModal}>Close Modal</button>
+          <button onClick={closeModal} className='modal-button-close'>Close</button>
         </div>
       </div>
     </Modal>

@@ -65,6 +65,11 @@ class ResultsResource(Resource):
         username = get_jwt_identity()
         max_tweets=int(data.get('max_tweets'))
         tags = tag.split()
+        if len(tags) > 1:
+            query = f'{tags} -is:retweet lang:en'
+            tag = "_".join(tags)
+
+        query = f'{tag} OR to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en'
         
         def get_data(url, params, tag, max_tweets):
             results = []
@@ -92,8 +97,7 @@ class ResultsResource(Resource):
                 else:
                     token = meta_data['next_token']
                     params = {
-                        'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
-                        #'query': f'to:{tag} OR @{tag} -is:retweet lang:en',
+                        'query': query,
                         'start_time': start_date + "T00:00:00Z",
                         'end_time': end_date + 'T00:00:00Z',
                         'next_token': token,
@@ -109,8 +113,7 @@ class ResultsResource(Resource):
         url ="https://api.twitter.com/2/tweets/search/recent"
 
         params = {
-            'query': f'to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en',
-            #'query': f'to:{tag} OR @{tag} -is:retweet lang:en',
+            'query': query,
             'start_time': start_date+"T00:00:00Z",
             'end_time': end_date+'T00:00:00Z',
             'max_results': 100

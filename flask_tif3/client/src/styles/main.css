@@ -69,3 +69,36 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+
+.modal-button {
+  background-color: #4c8caf;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.modal-button:disabled {
+  background-color: #a4a1a1;
+  cursor: not-allowed;
+}
+
+.modal-button-close {
+  background-color: #dc3939;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}

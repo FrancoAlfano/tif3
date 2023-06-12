@@ -52,22 +52,19 @@ def plott(positives, negatives, neutrals, lemmatized, tag):
 
     # Bar chart for word frequencies
     plt.figure(figsize=(10, 6))
-    plt.bar(top_10_words.index, top_10_words['Frequency'])
-    plt.xlabel('Term')
-    plt.ylabel('Frequency')
-    plt.title('Top 10 Word Frequencies')
-    plt.xticks(rotation=45)
-
-    # Add labels for each bar
+    plt.barh(top_10_words.index, top_10_words['Frequency'])
+    plt.xlabel('Frequency', fontsize=15)
+    plt.title('Top 10 Word Frequencies', fontsize=15)
     for i, freq in enumerate(top_10_words['Frequency']):
-        plt.text(i, freq, str(freq), ha='center', va='bottom')
-
-    # Save the bar chart
+        plt.text(freq, i, str(freq), ha='left', va='center', fontsize=13)
+    plt.gca().invert_yaxis()
+    plt.yticks(fontsize=15)
     bar_chart_filename = f"{tag}_bar_chart_{timestamp}.png"
     temp_bar_chart_filename = os.path.join(temp_dir, bar_chart_filename)
-    plt.savefig(temp_bar_chart_filename, dpi=200)
+    plt.savefig(temp_bar_chart_filename, dpi=300)
     bar_chart_path = os.path.join(final_location, bar_chart_filename)
     shutil.move(temp_bar_chart_filename, bar_chart_path)
+
 
     # Generate pie chart
     plt.figure()  # Create a new figure
