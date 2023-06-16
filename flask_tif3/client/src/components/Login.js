@@ -35,7 +35,10 @@ const LoginPage=()=>{
                 setShow(true)
             } else {
                 login(data.access_token)
-                history.push('/')
+                history.push({
+                    pathname: '/',
+                    state: { username: data.username }
+                });
             }
 
         })
@@ -58,6 +61,7 @@ const LoginPage=()=>{
                 :
                 <h1>Login</h1>
                 }
+                <br></br>
                 <from>
                     <Form.Group>
                         <Form.Label>Username</Form.Label>

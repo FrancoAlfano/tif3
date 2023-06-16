@@ -110,6 +110,7 @@ class ResultsResource(Resource):
             return df, actual_tweet_count
 
         bearer_token = os.environ.get("Bearer")
+        print(bearer_token)
         url ="https://api.twitter.com/2/tweets/search/recent"
 
         params = {

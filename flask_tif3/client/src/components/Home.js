@@ -110,6 +110,7 @@ const LoggedinHome = () => {
         .then((data) => {
           const { word_cloud, pie_chart, frequency } = data;
           const imageUrls = ["/images/"+pie_chart, "/images/"+word_cloud, "/images/"+frequency];
+          console.log(imageUrls)
           setModalImageUrls(imageUrls);
           setModalIndex(id);
           setModalIsOpen(true);
@@ -142,6 +143,7 @@ const LoggedinHome = () => {
       return (
         <div className="container">
           <h1>TwitterWatch</h1>
+          <br></br>
           <div className="results">
           {results.reverse().map((result, index) => (
             <Result
@@ -178,14 +180,17 @@ const LoggedinHome = () => {
       );
     };
 
-const LoggedOutHome=()=>{
-    return (
-    <div className="home container">
-        <h1 className="heading">Welcome to TwitterWatch</h1>
-        <Link to="/login" className="btn btn-primary btn-lg">Login</Link>
+
+const LoggedOutHome = () => {
+  const logoImage = "/images/logo.png"
+  return (
+    <div className="home-container">
+      <img src={logoImage} alt="TwitterWatch Logo" className="logo-image" />
+      <br></br>
+      <Link to="/login" className="btn btn-primary btn-lg">Login</Link>
     </div>
-    )
-}
+  );
+};
 
 const HomePage=()=>{
     const [logged]=useAuth()

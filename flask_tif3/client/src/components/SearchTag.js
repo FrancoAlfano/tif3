@@ -46,7 +46,7 @@ const LoggedInSearchTag = () => {
       .then((res) => res.json())
       .then((data) => {
         setLoading(false);
-        history.push('/');
+        history.push('/', { username: data.username })
       })
       .catch((err) => {
         setLoading(false);
@@ -167,12 +167,12 @@ const LoggedInSearchTag = () => {
 };
 
 const LoggedOutSearchTag = () => {
+  const logoImage = "/images/logo.png"
   return (
-    <div className="home container">
-      <h1 className="heading">Welcome to TwitterWatch</h1>
-      <Link to="/login" className="btn btn-primary btn-lg">
-        Login
-      </Link>
+    <div className="home-container">
+      <img src={logoImage} alt="TwitterWatch Logo" className="logo-image" />
+      <br></br>
+      <Link to="/login" className="btn btn-primary btn-lg">Login</Link>
     </div>
   );
 };

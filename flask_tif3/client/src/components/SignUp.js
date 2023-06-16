@@ -67,6 +67,7 @@ const SignUpPage =()=>{
                 :
                 <h1>Sign Up</h1>
                 }
+                <br></br>
 
                 <from>
                     <Form.Group>
@@ -125,7 +126,7 @@ const SignUpPage =()=>{
                     </Form.Group>
                     <br></br>
                     <Form.Group>
-                        <Button as="sub" variant='primary' onClick={handleSubmit(submitForm)}>Create User</Button>
+                        <Button as="sub" variant='primary' onClick={handleSubmit(submitForm)}>Create account</Button>
                     </Form.Group>
                 </from>
             </div>

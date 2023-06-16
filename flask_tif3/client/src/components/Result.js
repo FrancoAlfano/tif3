@@ -10,19 +10,20 @@ const Result = ({ username, tag, positives, negatives, neutrals, start_date, end
   return (
     <Card className="result">
       <Card.Body>
-        <Card.Title>Username: {username}</Card.Title>
         <Card.Title>Tag Searched: {tag}</Card.Title>
-        <p>Number of positive words: {positives}</p>
-        <p>Number of negative words: {negatives}</p>
-        <p>Number of neutral words: {neutrals}</p>
-        <p>Total number of tweets pulled: {max_tweets}</p>
-        <p>Total number of tweets analyzed: {positives + negatives + neutrals}</p>
+        <br></br>
+        <p>Positive words: {positives}</p>
+        <p>Negative words: {negatives}</p>
+        <p>Neutral words: {neutrals}</p>
+        <p>Tweets pulled: {max_tweets}</p>
+        <p>Tweets analyzed: {positives + negatives + neutrals}</p>
         <p>Start date: {formattedStartDate}</p>
         <p>End date: {formattedEndDate}</p>
+        <br></br>
         {' '}
-        <Button variant="danger" onClick={onDelete}>Delete</Button>
-        {'  '}
         <Button variant="secondary" onClick={onMore}>More data</Button>
+        {'  '}
+        <Button variant="danger" onClick={onDelete}>Delete</Button>
       </Card.Body>
     </Card>
   );
