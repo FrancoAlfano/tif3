@@ -12,11 +12,11 @@ const Result = ({ username, tag, positives, negatives, neutrals, start_date, end
       <Card.Body>
         <Card.Title>Tag Searched: {tag}</Card.Title>
         <br></br>
+        <p>Tweets pulled: {max_tweets}</p>
+        <p>Tweets analyzed: {positives + negatives + neutrals}</p>
         <p>Positive words: {positives}</p>
         <p>Negative words: {negatives}</p>
         <p>Neutral words: {neutrals}</p>
-        <p>Tweets pulled: {max_tweets}</p>
-        <p>Tweets analyzed: {positives + negatives + neutrals}</p>
         <p>Start date: {formattedStartDate}</p>
         <p>End date: {formattedEndDate}</p>
         <br></br>

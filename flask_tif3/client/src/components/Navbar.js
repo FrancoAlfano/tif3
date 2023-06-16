@@ -1,40 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth, logout } from "../auth";
 
 const LoggedInLinks = (props) => {
-  const location = useLocation();
-  const homeLinkProps = {
-    to: {
-      pathname: "/",
-      state: {
-        username: props.username,
-      },
-    },
-    className: "nav-link active",
-  };
-  const searchLinkProps = {
-    to: {
-      pathname: "/searchtag",
-      state: {
-        username: props.username,
-      },
-    },
-    className: "nav-link active",
-  };
-
   return (
     <>
       <li className="nav-item">
-        <Link {...homeLinkProps}>Home</Link>
+        <Link className="nav-link active" to="/">Home</Link>
       </li>
       <li className="nav-item">
-        <Link {...searchLinkProps}>Search a tag #</Link>
+        <Link className="nav-link active" to="/searchtag">Search a tag #</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link active" to="#" onClick={logout}>
-          Log Out
-        </Link>
+        <Link className="nav-link active" to="#" onClick={logout}>Log Out</Link>
       </li>
       <li className="nav-item ms-auto">
         <span className="nav-link active">Logged in as {props.username}</span>
@@ -47,19 +25,13 @@ const LoggedOutLinks = () => {
   return (
     <>
       <li className="nav-item">
-        <Link className="nav-link active" aria-current="page" to="/">
-          Home
-        </Link>
+        <Link className="nav-link active" aria-current="page" to="/">Home</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link active" to="/signup">
-          Sign Up
-        </Link>
+        <Link className="nav-link active" to="/signup">Sign Up</Link>
       </li>
       <li className="nav-item">
-        <Link className="nav-link active" to="/login">
-          Login
-        </Link>
+        <Link className="nav-link active" to="/login">Login</Link>
       </li>
     </>
   );
@@ -67,22 +39,25 @@ const LoggedOutLinks = () => {
 
 const NavBar = () => {
   const [logged] = useAuth();
-  const username = useLocation().state?.username;
-  const logoImage = "/images/logo.png";
+  const location = useLocation();
+  const [username, setUsername] = useState('');
 
-  const logoLinkProps = {
-    to: {
-      pathname: "/results",
-      state: {
-        username: username,
-      },
-    },
-  };
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    if (location.state?.username) {
+      setUsername(location.state.username);
+      localStorage.setItem('username', location.state.username);
+    } else if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, [location.state]);
+
+  const logoImage = "/images/logo.png";
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        <Link className="navbar-brand" {...logoLinkProps}>
+        <Link className="navbar-brand" to="/">
           <img src={logoImage} alt="TwitterWatch Logo" className="navbar-image" />
         </Link>
         <button

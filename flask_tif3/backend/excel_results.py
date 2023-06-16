@@ -25,7 +25,10 @@ result_model=result_ns.model(
         "neutrals":fields.Integer(),
         "word_cloud":fields.String(),
         "pie_chart":fields.String(),
-        "frequency":fields.String()
+        "frequency":fields.String(),
+        "start_date":fields.String(),
+        "end_date":fields.String(),
+        "max_tweets": fields.Integer()
     }
 )
 
@@ -54,13 +57,15 @@ class ResultsResource(Resource):
         tag=data.get('tag')
         username = get_jwt_identity()
 
+        max_tweets=int(data.get('max_tweets'))
+        start_date=data.get('start_date')
+        end_date=data.get('end_date')
+
         rm_urls = r'(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?'
         rm_hash = r'#'
         rm_usr_mention = r'@'
 
-        df = pd.read_csv(f'../data/{tag}.csv')
-
-        #tweets_pulled = df.shape[0]
+        df = pd.read_csv(f'../data/{tag}.csv', nrows=max_tweets)
 
         #as the twitter api doesn't correctly filter english tweets, we will do it here
         df['lang'] = df['text'].apply(lambda tweet: cld3.get_language(tweet).language)
@@ -136,7 +141,10 @@ class ResultsResource(Resource):
             neutrals=neutrals,
             word_cloud=word_cloud,
             pie_chart=pie_chart,
-            frequency=frequency
+            frequency=frequency,
+            start_date=start_date,
+            end_date=end_date,
+            max_tweets=max_tweets
         )
         
         new_result.save()
