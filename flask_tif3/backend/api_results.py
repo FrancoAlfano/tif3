@@ -66,10 +66,10 @@ class ResultsResource(Resource):
         max_tweets=int(data.get('max_tweets'))
         tags = tag.split()
         if len(tags) > 1:
-            query = f'{tags} -is:retweet lang:en'
+            query = f'{tag} -is:retweet lang:en'
             tag = "_".join(tags)
-
-        query = f'{tag} OR to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en'
+        else:
+            query = f'{tag} OR to:{tag} OR #{tag} OR @{tag} -is:retweet lang:en'
         
         def get_data(url, params, tag, max_tweets):
             results = []
@@ -110,7 +110,6 @@ class ResultsResource(Resource):
             return df, actual_tweet_count
 
         bearer_token = os.environ.get("Bearer")
-        print(bearer_token)
         url ="https://api.twitter.com/2/tweets/search/recent"
 
         params = {

@@ -14,9 +14,9 @@ const Result = ({ username, tag, positives, negatives, neutrals, start_date, end
         <br></br>
         <p>Tweets pulled: {max_tweets}</p>
         <p>Tweets analyzed: {positives + negatives + neutrals}</p>
-        <p>Positive words: {positives}</p>
-        <p>Negative words: {negatives}</p>
-        <p>Neutral words: {neutrals}</p>
+        <p>Positive tweets: {positives}</p>
+        <p>Negative tweets: {negatives}</p>
+        <p>Neutral tweets: {neutrals}</p>
         <p>Start date: {formattedStartDate}</p>
         <p>End date: {formattedEndDate}</p>
         <br></br>

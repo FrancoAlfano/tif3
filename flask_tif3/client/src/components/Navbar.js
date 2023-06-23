@@ -11,11 +11,11 @@ const LoggedInLinks = (props) => {
       <li className="nav-item">
         <Link className="nav-link active" to="/searchtag">Search a tag #</Link>
       </li>
-      <li className="nav-item">
-        <Link className="nav-link active" to="#" onClick={logout}>Log Out</Link>
-      </li>
       <li className="nav-item ms-auto">
         <span className="nav-link active">Logged in as {props.username}</span>
+      </li>
+      <li className="nav-item">
+        <Link className="nav-link active" to="#" onClick={logout}>Log Out</Link>
       </li>
     </>
   );

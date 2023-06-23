@@ -36,7 +36,7 @@ const LoginPage=()=>{
             } else {
                 login(data.access_token)
                 history.push({
-                    pathname: '/',
+                    pathname: '/searchtag',
                     state: { username: data.username }
                 });
             }
